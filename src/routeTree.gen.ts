@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CaregiverRouteImport } from './routes/caregiver'
+import { Route as DoctorRouteImport } from './routes/doctor'
+import { Route as GovernmentRouteImport } from './routes/government'
 import { Route as ElderIndexRouteImport } from './routes/elder/index'
 import { Route as ElderHelpRouteImport } from './routes/elder/help'
 import { Route as ElderPeopleRouteImport } from './routes/elder/people'
@@ -20,6 +23,21 @@ import { Route as ElderGameDomainRouteImport } from './routes/elder/game.$domain
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CaregiverRoute = CaregiverRouteImport.update({
+  id: '/caregiver',
+  path: '/caregiver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorRoute = DoctorRouteImport.update({
+  id: '/doctor',
+  path: '/doctor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GovernmentRoute = GovernmentRouteImport.update({
+  id: '/government',
+  path: '/government',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElderIndexRoute = ElderIndexRouteImport.update({
@@ -55,6 +73,9 @@ const ElderGameDomainRoute = ElderGameDomainRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/caregiver': typeof CaregiverRoute
+  '/doctor': typeof DoctorRoute
+  '/government': typeof GovernmentRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -64,6 +85,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/caregiver': typeof CaregiverRoute
+  '/doctor': typeof DoctorRoute
+  '/government': typeof GovernmentRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -74,6 +98,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/caregiver': typeof CaregiverRoute
+  '/doctor': typeof DoctorRoute
+  '/government': typeof GovernmentRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -85,6 +112,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/caregiver'
+    | '/doctor'
+    | '/government'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -94,6 +124,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/caregiver'
+    | '/doctor'
+    | '/government'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -103,6 +136,9 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/caregiver'
+    | '/doctor'
+    | '/government'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -113,6 +149,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CaregiverRoute: typeof CaregiverRoute
+  DoctorRoute: typeof DoctorRoute
+  GovernmentRoute: typeof GovernmentRoute
   ElderHelpRoute: typeof ElderHelpRoute
   ElderPeopleRoute: typeof ElderPeopleRoute
   ElderPlayRoute: typeof ElderPlayRoute
@@ -128,6 +167,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/caregiver': {
+      id: '/caregiver'
+      path: '/caregiver'
+      fullPath: '/caregiver'
+      preLoaderRoute: typeof CaregiverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/government': {
+      id: '/government'
+      path: '/government'
+      fullPath: '/government'
+      preLoaderRoute: typeof GovernmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elder/': {
@@ -177,6 +237,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CaregiverRoute: CaregiverRoute,
+  DoctorRoute: DoctorRoute,
+  GovernmentRoute: GovernmentRoute,
   ElderHelpRoute: ElderHelpRoute,
   ElderPeopleRoute: ElderPeopleRoute,
   ElderPlayRoute: ElderPlayRoute,
