@@ -25,12 +25,27 @@ export const Route = createFileRoute("/caregiver")({
 
 type FormKind = "elder" | "reminder" | "card" | null;
 
+interface FormState {
+  name?: string;
+  pin?: string;
+  age?: string;
+  state?: string;
+  elderId?: string;
+  title?: string;
+  time?: string;
+  category?: string;
+  windowSec?: string;
+  relationship?: string;
+  emoji?: string;
+  note?: string;
+}
+
 function Caregiver() {
   const bump = useApp((s) => s.bump);
   const simulateOffline = useApp((s) => s.simulateOffline);
   const setSimulateOffline = useApp((s) => s.setSimulateOffline);
   const [form, setForm] = useState<FormKind>(null);
-  const [f, setF] = useState<Record<string, string>>({});
+  const [f, setF] = useState<FormState>({});
 
   const data = useDexie(async () => {
     const db = getDb();
@@ -41,7 +56,7 @@ function Caregiver() {
     return { elders, sessions, reminders, cards };
   });
 
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
+  const set = (k: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setF((p) => ({ ...p, [k]: e.target.value }));
 
   const save = async () => {

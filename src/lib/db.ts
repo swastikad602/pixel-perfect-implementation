@@ -65,7 +65,7 @@ export async function ensureSeed() {
     for (let dayAgo = 27; dayAgo >= 0; dayAgo--) {
       const perDay = (dayAgo + idx) % 3 === 0 ? 1 : 2;
       for (let k = 0; k < perDay; k++) {
-        const domain: Domain = DOMAINS[(dayAgo + k + idx) % 4];
+        const domain: Domain = DOMAINS[(dayAgo + k + idx) % 4]!;
         const base = 0.55 + idx * 0.08 + (k % 2) * 0.05;
         // Elder e1 drifts downward in the last week so "Needs review" is real.
         const drift = idx === 0 && dayAgo < 6 ? -0.28 : 0;

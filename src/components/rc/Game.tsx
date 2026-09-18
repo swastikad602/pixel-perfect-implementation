@@ -130,7 +130,7 @@ function AttentionGame({ level, finish, lang }: { level: Level; finish: (a: numb
   const board = useMemo(() => {
     const items = shuffle(ATTENTION_ITEMS, round + 1).slice(0, size);
     // Level 2 adds visually busy distractors around the grid.
-    return { items, target: items[round % items.length] };
+    return { items, target: items[round % items.length]! };
   }, [round, size]);
 
   const tap = (item: string) => {
@@ -169,7 +169,7 @@ function PatternGame({ level, finish, lang }: { level: Level; finish: (a: number
   const [round, setRound] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [tries, setTries] = useState(0);
-  const item = PATTERN_SEQUENCES[round];
+  const item = PATTERN_SEQUENCES[round]!;
   const options = useMemo(
     () => shuffle([item.answer, ...item.distractors.slice(0, level === 1 ? 1 : 3)], round + 2),
     [item, level, round],
@@ -214,7 +214,7 @@ function PatternGame({ level, finish, lang }: { level: Level; finish: (a: number
 /* -------- Executive function: arrange the routine -------- */
 function ExecutiveGame({ level, finish, lang }: { level: Level; finish: (a: number) => void; lang: "en" | "bn" }) {
   const count = level === 1 ? 3 : 5;
-  const correctOrder = useMemo(() => ROUTINE_STEPS[0].slice(0, count), [count]);
+  const correctOrder = useMemo(() => ROUTINE_STEPS[0]!.slice(0, count), [count]);
   const shuffled = useMemo(() => shuffle(correctOrder, 0.42), [correctOrder]);
   const [picked, setPicked] = useState<string[]>([]);
 

@@ -54,10 +54,14 @@ function Routine() {
   }, [reminders, bump]);
 
   const respond = async (id: number, status: ReminderStatus) => {
-    const patch: Record<string, unknown> = { status, respondedAt: Date.now() };
+    const patch: Partial<{ status: ReminderStatus; respondedAt: number; createdAt: number }> = {
+      status,
+      respondedAt: Date.now(),
+    };
     if (status === "snoozed") {
+      // Snooze keeps it pending and restarts the response window.
       patch.status = "pending";
-      patch.createdAt = Date.now(); // restart the response window
+      patch.createdAt = Date.now();
     }
     await getDb().reminders.update(id, patch);
     bump();
