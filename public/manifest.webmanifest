@@ -1,0 +1,9 @@
+{
+  "name": "RECONNECT",
+  "short_name": "RECONNECT",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbf7ef",
+  "theme_color": "#0f5f5c",
+  "icons": [{ "src": "/favicon.ico", "sizes": "48x48", "type": "image/x-icon" }]
+}
