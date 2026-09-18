@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ElderIndexRouteImport } from './routes/elder/index'
+import { Route as ElderHelpRouteImport } from './routes/elder/help'
+import { Route as ElderPeopleRouteImport } from './routes/elder/people'
+import { Route as ElderPlayRouteImport } from './routes/elder/play'
+import { Route as ElderGameDomainRouteImport } from './routes/elder/game.$domain'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ElderIndexRoute = ElderIndexRouteImport.update({
+  id: '/elder/',
+  path: '/elder/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElderHelpRoute = ElderHelpRouteImport.update({
+  id: '/elder/help',
+  path: '/elder/help',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElderPeopleRoute = ElderPeopleRouteImport.update({
+  id: '/elder/people',
+  path: '/elder/people',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElderPlayRoute = ElderPlayRouteImport.update({
+  id: '/elder/play',
+  path: '/elder/play',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElderGameDomainRoute = ElderGameDomainRouteImport.update({
+  id: '/elder/game/$domain',
+  path: '/elder/game/$domain',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/elder/help': typeof ElderHelpRoute
+  '/elder/people': typeof ElderPeopleRoute
+  '/elder/play': typeof ElderPlayRoute
+  '/elder/': typeof ElderIndexRoute
+  '/elder/game/$domain': typeof ElderGameDomainRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/elder/help': typeof ElderHelpRoute
+  '/elder/people': typeof ElderPeopleRoute
+  '/elder/play': typeof ElderPlayRoute
+  '/elder': typeof ElderIndexRoute
+  '/elder/game/$domain': typeof ElderGameDomainRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/elder/help': typeof ElderHelpRoute
+  '/elder/people': typeof ElderPeopleRoute
+  '/elder/play': typeof ElderPlayRoute
+  '/elder/': typeof ElderIndexRoute
+  '/elder/game/$domain': typeof ElderGameDomainRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/elder/help'
+    | '/elder/people'
+    | '/elder/play'
+    | '/elder/'
+    | '/elder/game/$domain'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/elder/help'
+    | '/elder/people'
+    | '/elder/play'
+    | '/elder'
+    | '/elder/game/$domain'
+  id:
+    | '__root__'
+    | '/'
+    | '/elder/help'
+    | '/elder/people'
+    | '/elder/play'
+    | '/elder/'
+    | '/elder/game/$domain'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ElderHelpRoute: typeof ElderHelpRoute
+  ElderPeopleRoute: typeof ElderPeopleRoute
+  ElderPlayRoute: typeof ElderPlayRoute
+  ElderIndexRoute: typeof ElderIndexRoute
+  ElderGameDomainRoute: typeof ElderGameDomainRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/elder/': {
+      id: '/elder/'
+      path: '/elder'
+      fullPath: '/elder/'
+      preLoaderRoute: typeof ElderIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/elder/help': {
+      id: '/elder/help'
+      path: '/elder/help'
+      fullPath: '/elder/help'
+      preLoaderRoute: typeof ElderHelpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/elder/people': {
+      id: '/elder/people'
+      path: '/elder/people'
+      fullPath: '/elder/people'
+      preLoaderRoute: typeof ElderPeopleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/elder/play': {
+      id: '/elder/play'
+      path: '/elder/play'
+      fullPath: '/elder/play'
+      preLoaderRoute: typeof ElderPlayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/elder/game/$domain': {
+      id: '/elder/game/$domain'
+      path: '/elder/game/$domain'
+      fullPath: '/elder/game/$domain'
+      preLoaderRoute: typeof ElderGameDomainRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ElderHelpRoute: ElderHelpRoute,
+  ElderPeopleRoute: ElderPeopleRoute,
+  ElderPlayRoute: ElderPlayRoute,
+  ElderIndexRoute: ElderIndexRoute,
+  ElderGameDomainRoute: ElderGameDomainRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
