@@ -20,7 +20,9 @@ function shuffle<T>(arr: T[], seed = Math.random()): T[] {
   };
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(rnd() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    const tmp = a[i] as T;
+    a[i] = a[j] as T;
+    a[j] = tmp;
   }
   return a;
 }
@@ -80,7 +82,7 @@ function MemoryGame({ level, finish, lang }: { level: Level; finish: (a: number)
     setOpen(next);
     if (next.length === 2) {
       setAttempts((a) => a + 1);
-      const hit = cards[next[0]] === cards[next[1]];
+      const hit = cards[next[0]!] === cards[next[1]!];
       setTimeout(() => {
         if (hit) {
           const done = [...matched, ...next];
