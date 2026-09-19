@@ -96,7 +96,9 @@ function play(audio: string) {
     current.pause();
     current = null;
   }
-  const el = new Audio(`data:audio/mpeg;base64,${audio}`);
+  // Sarvam returns WAV ("UklGR..." = RIFF); older cached clips are MP3.
+  const mime = audio.startsWith("UklGR") ? "audio/wav" : "audio/mpeg";
+  const el = new Audio(`data:${mime};base64,${audio}`);
   current = el;
   el.onended = () => setBusy(false);
   el.onerror = () => setBusy(false);
