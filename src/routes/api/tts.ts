@@ -1,17 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 /**
- * Cloud text-to-speech for RECONNECT.
- * Key never leaves the server; returns base64 MP3 because ElevenLabs replies with raw audio bytes.
+ * Cloud text-to-speech for RECONNECT — Sarvam AI (Bulbul v3).
+ * Key never leaves the server; Sarvam returns base64 MP3 in `audios[0]`,
+ * which is passed straight through to the client.
  */
-const VOICE_EN = "JBFqnCBsd6RMkjVDRZzb"; // George — clear, calm English
-const VOICE_BN = "EXAVITQu4vr4xnSDxMaL"; // Sarah — clearest of the voices tried on Bengali script
+const SPEAKER_EN = "anushka"; // clear, calm Indian-English voice
+const SPEAKER_BN = "vidya"; // clearest of the Bengali speakers tried
 
 export const Route = createFileRoute("/api/tts")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const apiKey = process.env["ELEVENLABS_API_KEY"];
+        const apiKey = process.env["SARVAM_API_KEY"];
         if (!apiKey) {
           return Response.json({ error: "TTS key not configured" }, { status: 503 });
         }
@@ -27,33 +28,32 @@ export const Route = createFileRoute("/api/tts")({
         const lang = body.lang === "bn" ? "bn" : "en";
         if (!text) return Response.json({ error: "text is required" }, { status: 400 });
 
-        const voiceId = lang === "bn" ? VOICE_BN : VOICE_EN;
-        const res = await fetch(
-          `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
-          {
-            method: "POST",
-            headers: { "xi-api-key": apiKey, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              text,
-              model_id: "eleven_multilingual_v2",
-              voice_settings: {
-                stability: 0.6,
-                similarity_boost: 0.75,
-                style: 0.2,
-                use_speaker_boost: true,
-                speed: 0.9, // gentle pace for elderly listeners
-              },
-            }),
+        const res = await fetch("https://api.sarvam.ai/text-to-speech", {
+          method: "POST",
+          headers: {
+            "api-subscription-key": apiKey,
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({
+            text,
+            model: "bulbul:v3",
+            target_language_code: lang === "bn" ? "bn-IN" : "en-IN",
+            speaker: lang === "bn" ? SPEAKER_BN : SPEAKER_EN,
+            pace: 0.9, // gentle pace for elderly listeners
+          }),
+        });
 
         if (!res.ok) {
           const detail = await res.text();
-          console.error(`ElevenLabs TTS failed [${res.status}]: ${detail}`);
+          console.error(`Sarvam TTS failed [${res.status}]: ${detail}`);
           return Response.json({ error: detail || "TTS failed" }, { status: res.status });
         }
 
-        const audio = Buffer.from(await res.arrayBuffer()).toString("base64");
+        const data = (await res.json()) as { audios?: string[] };
+        const audio = data.audios?.[0];
+        if (!audio) {
+          return Response.json({ error: "No audio returned" }, { status: 502 });
+        }
         return Response.json({ audio });
       },
     },
