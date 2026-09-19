@@ -1,7 +1,7 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Volume2, WifiOff, CheckCircle2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { speak, ttsAvailable } from "@/lib/tts";
+import { onSpeakingChange, speak, ttsAvailable } from "@/lib/tts";
 import { useApp } from "@/store/app";
 import { useOnline } from "@/hooks/useDexie";
 
@@ -119,14 +119,26 @@ export function ProgressBar({ value, className }: { value: number; className?: s
 /* ---------------- AudioIcon ---------------- */
 export function AudioIcon({ text, className }: { text: string; className?: string }) {
   const lang = useApp((s) => s.lang);
+  // Subtle pulse between the tap and the audio starting.
+  const [speaking, setSpeaking] = useState(false);
   if (!ttsAvailable()) return null;
   return (
     <button
       type="button"
-      onClick={() => speak(text, lang)}
+      onClick={() => {
+        setSpeaking(true);
+        speak(text, lang);
+        const stop = onSpeakingChange((busy) => {
+          if (!busy) {
+            setSpeaking(false);
+            stop();
+          }
+        });
+      }}
       aria-label="Read aloud"
       className={cn(
         "inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors hover:bg-primary/20",
+        speaking && "animate-pulse bg-primary/20",
         className,
       )}
     >

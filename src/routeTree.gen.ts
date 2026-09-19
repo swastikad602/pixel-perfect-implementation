@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CaregiverRouteImport } from './routes/caregiver'
 import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as GovernmentRouteImport } from './routes/government'
+import { Route as ApiTtsRouteImport } from './routes/api/tts'
 import { Route as ElderIndexRouteImport } from './routes/elder/index'
 import { Route as ElderHelpRouteImport } from './routes/elder/help'
 import { Route as ElderPeopleRouteImport } from './routes/elder/people'
@@ -38,6 +39,11 @@ const DoctorRoute = DoctorRouteImport.update({
 const GovernmentRoute = GovernmentRouteImport.update({
   id: '/government',
   path: '/government',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTtsRoute = ApiTtsRouteImport.update({
+  id: '/api/tts',
+  path: '/api/tts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElderIndexRoute = ElderIndexRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/caregiver': typeof CaregiverRoute
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
+  '/api/tts': typeof ApiTtsRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByTo {
   '/caregiver': typeof CaregiverRoute
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
+  '/api/tts': typeof ApiTtsRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -101,6 +109,7 @@ export interface FileRoutesById {
   '/caregiver': typeof CaregiverRoute
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
+  '/api/tts': typeof ApiTtsRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/caregiver'
     | '/doctor'
     | '/government'
+    | '/api/tts'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -127,6 +137,7 @@ export interface FileRouteTypes {
     | '/caregiver'
     | '/doctor'
     | '/government'
+    | '/api/tts'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/caregiver'
     | '/doctor'
     | '/government'
+    | '/api/tts'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -152,6 +164,7 @@ export interface RootRouteChildren {
   CaregiverRoute: typeof CaregiverRoute
   DoctorRoute: typeof DoctorRoute
   GovernmentRoute: typeof GovernmentRoute
+  ApiTtsRoute: typeof ApiTtsRoute
   ElderHelpRoute: typeof ElderHelpRoute
   ElderPeopleRoute: typeof ElderPeopleRoute
   ElderPlayRoute: typeof ElderPlayRoute
@@ -188,6 +201,13 @@ declare module '@tanstack/react-router' {
       path: '/government'
       fullPath: '/government'
       preLoaderRoute: typeof GovernmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tts': {
+      id: '/api/tts'
+      path: '/api/tts'
+      fullPath: '/api/tts'
+      preLoaderRoute: typeof ApiTtsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/elder/': {
@@ -240,6 +260,7 @@ const rootRouteChildren: RootRouteChildren = {
   CaregiverRoute: CaregiverRoute,
   DoctorRoute: DoctorRoute,
   GovernmentRoute: GovernmentRoute,
+  ApiTtsRoute: ApiTtsRoute,
   ElderHelpRoute: ElderHelpRoute,
   ElderPeopleRoute: ElderPeopleRoute,
   ElderPlayRoute: ElderPlayRoute,
