@@ -1,7 +1,7 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { Volume2, WifiOff, CheckCircle2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { speak, ttsAvailable } from "@/lib/tts";
+import { onSpeakingChange, speak, ttsAvailable } from "@/lib/tts";
 import { useApp } from "@/store/app";
 import { useOnline } from "@/hooks/useDexie";
 
@@ -119,9 +119,8 @@ export function ProgressBar({ value, className }: { value: number; className?: s
 /* ---------------- AudioIcon ---------------- */
 export function AudioIcon({ text, className }: { text: string; className?: string }) {
   const lang = useApp((s) => s.lang);
-  const [speaking, setSpeaking] = useState(false);
   // Subtle pulse between the tap and the audio starting.
-  useEffect(() => onSpeakingChange(() => {}), []);
+  const [speaking, setSpeaking] = useState(false);
   if (!ttsAvailable()) return null;
   return (
     <button
