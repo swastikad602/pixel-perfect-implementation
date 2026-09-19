@@ -3,7 +3,7 @@ import { getDb } from "./db";
 import { STRINGS } from "./i18n";
 
 /**
- * Cloud TTS (ElevenLabs via /api/tts) with a Dexie clip cache and a
+ * Cloud TTS (Sarvam AI Bulbul v3 via /api/tts) with a Dexie clip cache and a
  * browser SpeechSynthesis fallback so the user never gets silence.
  * speak(text, lang) keeps its original name and signature.
  */
