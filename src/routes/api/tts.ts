@@ -6,7 +6,7 @@ import { createFileRoute } from "@tanstack/react-router";
  * which is passed straight through to the client.
  */
 const SPEAKER_EN = "anushka"; // clear, calm Indian-English voice
-const SPEAKER_BN = "vidya"; // clearest of the Bengali speakers tried
+const SPEAKER_BN = "kavya"; // clearest of the Bengali speakers tried
 
 export const Route = createFileRoute("/api/tts")({
   server: {
