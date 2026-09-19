@@ -5,8 +5,8 @@ import { createFileRoute } from "@tanstack/react-router";
  * Key never leaves the server; Sarvam returns base64 MP3 in `audios[0]`,
  * which is passed straight through to the client.
  */
-const SPEAKER_EN = "anushka"; // clear, calm Indian-English voice
-const SPEAKER_BN = "kavya"; // clearest of the Bengali speakers tried
+const SPEAKER_EN = "priya"; // clear, calm Indian-English voice
+const SPEAKER_BN = "priya"; // clearest of the Bengali speakers tried (vs ritu, kavya, shreya)
 
 export const Route = createFileRoute("/api/tts")({
   server: {
