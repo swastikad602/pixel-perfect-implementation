@@ -3,7 +3,7 @@ import { getDb } from "./db";
 import { STRINGS } from "./i18n";
 
 /**
- * Cloud TTS (ElevenLabs via /api/tts) with a Dexie clip cache and a
+ * Cloud TTS (Sarvam AI Bulbul v3 via /api/tts) with a Dexie clip cache and a
  * browser SpeechSynthesis fallback so the user never gets silence.
  * speak(text, lang) keeps its original name and signature.
  */
@@ -96,7 +96,9 @@ function play(audio: string) {
     current.pause();
     current = null;
   }
-  const el = new Audio(`data:audio/mpeg;base64,${audio}`);
+  // Sarvam returns WAV ("UklGR..." = RIFF); older cached clips are MP3.
+  const mime = audio.startsWith("UklGR") ? "audio/wav" : "audio/mpeg";
+  const el = new Audio(`data:${mime};base64,${audio}`);
   current = el;
   el.onended = () => setBusy(false);
   el.onerror = () => setBusy(false);
