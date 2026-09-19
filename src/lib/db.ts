@@ -25,6 +25,8 @@ class ReconnectDB extends Dexie {
   memoryCards!: Table<MemoryCard, number>;
   notes!: Table<DoctorNote, number>;
   chat!: Table<ChatMessage, number>;
+  // Cached cloud TTS clips (base64 mp3) keyed by `${lang}:${text}`.
+  ttsClips!: Table<{ key: string; audio: string; createdAt: number }, string>;
 
   constructor() {
     super("reconnect");
@@ -37,6 +39,7 @@ class ReconnectDB extends Dexie {
       notes: "++id, elderId, ts",
       chat: "++id, thread, ts",
     });
+    this.version(2).stores({ ttsClips: "key" });
   }
 }
 
