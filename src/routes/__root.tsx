@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { prewarmTts } from "../lib/tts";
 
 function NotFoundComponent() {
   return (
@@ -132,6 +133,8 @@ function RootComponent() {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
+    // Warm the common spoken phrases in both languages so they play instantly, even offline.
+    void prewarmTts();
   }, []);
 
   return (
