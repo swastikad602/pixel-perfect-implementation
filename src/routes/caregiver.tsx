@@ -6,7 +6,7 @@ import { Button, Card, CardTitle, Field, Modal, StatusBadge } from "@/components
 import { Chatbox } from "@/components/rc/Chatbox";
 import { getDb, today } from "@/lib/db";
 import { useDexie } from "@/hooks/useDexie";
-import { needsReview } from "@/lib/adaptive";
+import { needsReview, orientationTrend } from "@/lib/adaptive";
 import { DOMAIN_LABEL } from "@/lib/mockData";
 import { useApp } from "@/store/app";
 import type { ReminderStatus } from "@/lib/types";
@@ -145,6 +145,22 @@ function Caregiver() {
                   <Stat label="Last activity" value={last ? new Date(last.ts).toLocaleDateString() : "—"} />
                   <Stat label="Completed today" value={String(todays.length)} />
                   <Stat label="Family cards" value={String(cards.length)} />
+                </div>
+                <div>
+                  <p className="mb-2 text-sm font-semibold text-muted-foreground">Orientation check-in</p>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Stat
+                      label="Last 7 days"
+                      value={orientationTrend(sessions, 7) === null ? "—" : `${orientationTrend(sessions, 7)}%`}
+                    />
+                    <Stat
+                      label="Last 30 days"
+                      value={orientationTrend(sessions, 30) === null ? "—" : `${orientationTrend(sessions, 30)}%`}
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Activity performance trend — not a clinical diagnosis.
+                  </p>
                 </div>
                 <div>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">Reminders</p>
