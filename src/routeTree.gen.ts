@@ -19,7 +19,6 @@ import { Route as ElderHelpRouteImport } from './routes/elder/help'
 import { Route as ElderPeopleRouteImport } from './routes/elder/people'
 import { Route as ElderPlayRouteImport } from './routes/elder/play'
 import { Route as ElderRoutineRouteImport } from './routes/elder/routine'
-import { Route as ElderGameDomainRouteImport } from './routes/elder/game.$domain'
 import { Route as ElderModesDomainRouteImport } from './routes/elder/modes.$domain'
 import { Route as ElderGameDomainModeRouteImport } from './routes/elder/game.$domain.$mode'
 
@@ -73,20 +72,15 @@ const ElderRoutineRoute = ElderRoutineRouteImport.update({
   path: '/elder/routine',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ElderGameDomainRoute = ElderGameDomainRouteImport.update({
-  id: '/elder/game/$domain',
-  path: '/elder/game/$domain',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ElderModesDomainRoute = ElderModesDomainRouteImport.update({
   id: '/elder/modes/$domain',
   path: '/elder/modes/$domain',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElderGameDomainModeRoute = ElderGameDomainModeRouteImport.update({
-  id: '/$mode',
-  path: '/$mode',
-  getParentRoute: () => ElderGameDomainRoute,
+  id: '/elder/game/$domain/$mode',
+  path: '/elder/game/$domain/$mode',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -100,7 +94,6 @@ export interface FileRoutesByFullPath {
   '/elder/play': typeof ElderPlayRoute
   '/elder/routine': typeof ElderRoutineRoute
   '/elder/': typeof ElderIndexRoute
-  '/elder/game/$domain': typeof ElderGameDomainRouteWithChildren
   '/elder/modes/$domain': typeof ElderModesDomainRoute
   '/elder/game/$domain/$mode': typeof ElderGameDomainModeRoute
 }
@@ -115,7 +108,6 @@ export interface FileRoutesByTo {
   '/elder/play': typeof ElderPlayRoute
   '/elder/routine': typeof ElderRoutineRoute
   '/elder': typeof ElderIndexRoute
-  '/elder/game/$domain': typeof ElderGameDomainRouteWithChildren
   '/elder/modes/$domain': typeof ElderModesDomainRoute
   '/elder/game/$domain/$mode': typeof ElderGameDomainModeRoute
 }
@@ -131,7 +123,6 @@ export interface FileRoutesById {
   '/elder/play': typeof ElderPlayRoute
   '/elder/routine': typeof ElderRoutineRoute
   '/elder/': typeof ElderIndexRoute
-  '/elder/game/$domain': typeof ElderGameDomainRouteWithChildren
   '/elder/modes/$domain': typeof ElderModesDomainRoute
   '/elder/game/$domain/$mode': typeof ElderGameDomainModeRoute
 }
@@ -148,7 +139,6 @@ export interface FileRouteTypes {
     | '/elder/play'
     | '/elder/routine'
     | '/elder/'
-    | '/elder/game/$domain'
     | '/elder/modes/$domain'
     | '/elder/game/$domain/$mode'
   fileRoutesByTo: FileRoutesByTo
@@ -163,7 +153,6 @@ export interface FileRouteTypes {
     | '/elder/play'
     | '/elder/routine'
     | '/elder'
-    | '/elder/game/$domain'
     | '/elder/modes/$domain'
     | '/elder/game/$domain/$mode'
   id:
@@ -178,7 +167,6 @@ export interface FileRouteTypes {
     | '/elder/play'
     | '/elder/routine'
     | '/elder/'
-    | '/elder/game/$domain'
     | '/elder/modes/$domain'
     | '/elder/game/$domain/$mode'
   fileRoutesById: FileRoutesById
@@ -194,8 +182,8 @@ export interface RootRouteChildren {
   ElderPlayRoute: typeof ElderPlayRoute
   ElderRoutineRoute: typeof ElderRoutineRoute
   ElderIndexRoute: typeof ElderIndexRoute
-  ElderGameDomainRoute: typeof ElderGameDomainRouteWithChildren
   ElderModesDomainRoute: typeof ElderModesDomainRoute
+  ElderGameDomainModeRoute: typeof ElderGameDomainModeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -270,13 +258,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ElderRoutineRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/elder/game/$domain': {
-      id: '/elder/game/$domain'
-      path: '/elder/game/$domain'
-      fullPath: '/elder/game/$domain'
-      preLoaderRoute: typeof ElderGameDomainRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/elder/modes/$domain': {
       id: '/elder/modes/$domain'
       path: '/elder/modes/$domain'
@@ -286,25 +267,13 @@ declare module '@tanstack/react-router' {
     }
     '/elder/game/$domain/$mode': {
       id: '/elder/game/$domain/$mode'
-      path: '/$mode'
+      path: '/elder/game/$domain/$mode'
       fullPath: '/elder/game/$domain/$mode'
       preLoaderRoute: typeof ElderGameDomainModeRouteImport
-      parentRoute: typeof ElderGameDomainRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface ElderGameDomainRouteChildren {
-  ElderGameDomainModeRoute: typeof ElderGameDomainModeRoute
-}
-
-const ElderGameDomainRouteChildren: ElderGameDomainRouteChildren = {
-  ElderGameDomainModeRoute: ElderGameDomainModeRoute,
-}
-
-const ElderGameDomainRouteWithChildren = ElderGameDomainRoute._addFileChildren(
-  ElderGameDomainRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -317,8 +286,8 @@ const rootRouteChildren: RootRouteChildren = {
   ElderPlayRoute: ElderPlayRoute,
   ElderRoutineRoute: ElderRoutineRoute,
   ElderIndexRoute: ElderIndexRoute,
-  ElderGameDomainRoute: ElderGameDomainRouteWithChildren,
   ElderModesDomainRoute: ElderModesDomainRoute,
+  ElderGameDomainModeRoute: ElderGameDomainModeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
