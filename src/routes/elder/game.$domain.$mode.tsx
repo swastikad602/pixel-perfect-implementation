@@ -52,9 +52,9 @@ function GameScreen() {
       level,
       accuracy: r.accuracy,
       durationSec: r.durationSec,
-      responseMs: r.responseMs,
-      correctCount: r.correctCount,
-      incorrectCount: r.incorrectCount,
+      ...(r.responseMs !== undefined ? { responseMs: r.responseMs } : {}),
+      ...(r.correctCount !== undefined ? { correctCount: r.correctCount } : {}),
+      ...(r.incorrectCount !== undefined ? { incorrectCount: r.incorrectCount } : {}),
     });
     const next = recommendLevel({ domain, mode, level, accuracy: r.accuracy, durationSec: r.durationSec });
     await saveRecommendation(elderId, domain, mode, next);

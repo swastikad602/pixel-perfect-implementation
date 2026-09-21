@@ -59,7 +59,8 @@ class ReconnectDB extends Dexie {
           .table("sessions")
           .toCollection()
           .modify((s: GameSession) => {
-            if (!s.mode && s.domain !== "orientation") s.mode = legacyMode[s.domain];
+            const legacy = legacyMode[s.domain];
+            if (!s.mode && legacy) s.mode = legacy;
           });
       });
   }
