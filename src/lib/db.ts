@@ -4,6 +4,7 @@ import type {
   DoctorNote,
   Domain,
   Elder,
+  GameMode,
   GameSession,
   Level,
   MemoryCard,
@@ -12,6 +13,7 @@ import type {
 } from "./types";
 import {
   DOMAINS,
+  DOMAIN_MODES,
   SEED_ELDERS,
   SEED_MEMORY_CARDS,
   SEED_REMINDERS,
@@ -40,6 +42,26 @@ class ReconnectDB extends Dexie {
       chat: "++id, thread, ts",
     });
     this.version(2).stores({ ttsClips: "key" });
+    // v3 adds the per-game `mode` field (several games per domain) and orientation entries.
+    this.version(3)
+      .stores({
+        sessions: "++id, elderId, domain, mode, date, ts",
+        recommendations: "key, elderId, domain, mode",
+      })
+      .upgrade(async (tx) => {
+        const legacyMode: Record<string, GameMode> = {
+          memory: "matching",
+          attention: "find_object",
+          pattern: "sequence",
+          executive: "arrange",
+        };
+        await tx
+          .table("sessions")
+          .toCollection()
+          .modify((s: GameSession) => {
+            if (!s.mode && s.domain !== "orientation") s.mode = legacyMode[s.domain];
+          });
+      });
   }
 }
 
@@ -69,6 +91,8 @@ export async function ensureSeed() {
       const perDay = (dayAgo + idx) % 3 === 0 ? 1 : 2;
       for (let k = 0; k < perDay; k++) {
         const domain: Domain = DOMAINS[(dayAgo + k + idx) % 4]!;
+        const modes = DOMAIN_MODES[domain];
+        const mode = modes[(dayAgo + k) % modes.length]!;
         const base = 0.55 + idx * 0.08 + (k % 2) * 0.05;
         // Elder e1 drifts downward in the last week so "Needs review" is real.
         const drift = idx === 0 && dayAgo < 6 ? -0.28 : 0;
@@ -81,9 +105,27 @@ export async function ensureSeed() {
         sessions.push({
           elderId: elder.id,
           domain,
+          mode,
           level,
           accuracy: Math.round(accuracy * 100) / 100,
           durationSec: Math.round(35 + (1 - accuracy) * 70),
+          date: isoDay(d),
+          ts: d.getTime(),
+        });
+      }
+      // One orientation check-in on most days, so the trend has history.
+      if ((dayAgo + idx) % 2 === 0) {
+        const d = new Date();
+        d.setDate(d.getDate() - dayAgo);
+        d.setHours(8, 5, 0, 0);
+        const correct = (dayAgo * 7 + idx * 3) % 10 > (idx === 0 && dayAgo < 7 ? 5 : 2);
+        sessions.push({
+          elderId: elder.id,
+          domain: "orientation",
+          level: 1,
+          accuracy: correct ? 1 : 0,
+          durationSec: 6,
+          responseMs: 4200 + ((dayAgo * 311) % 5000),
           date: isoDay(d),
           ts: d.getTime(),
         });
@@ -103,16 +145,32 @@ export async function ensureSeed() {
   );
 }
 
-export async function getRecommendedLevel(elderId: string, domain: Domain): Promise<Level> {
-  const rec = await getDb().recommendations.get(`${elderId}:${domain}`);
-  return rec?.level ?? 1;
+const recKey = (elderId: string, domain: Domain, mode: GameMode) => `${elderId}:${domain}:${mode}`;
+
+export async function getRecommendedLevel(
+  elderId: string,
+  domain: Domain,
+  mode: GameMode,
+): Promise<Level> {
+  const db = getDb();
+  const rec = await db.recommendations.get(recKey(elderId, domain, mode));
+  if (rec) return rec.level;
+  // Fall back to the older per-domain recommendation saved before modes existed.
+  const legacy = await db.recommendations.get(`${elderId}:${domain}`);
+  return legacy?.level ?? 1;
 }
 
-export async function saveRecommendation(elderId: string, domain: Domain, level: Level) {
+export async function saveRecommendation(
+  elderId: string,
+  domain: Domain,
+  mode: GameMode,
+  level: Level,
+) {
   await getDb().recommendations.put({
-    key: `${elderId}:${domain}`,
+    key: recKey(elderId, domain, mode),
     elderId,
     domain,
+    mode,
     level,
     updatedAt: Date.now(),
   });
@@ -121,6 +179,22 @@ export async function saveRecommendation(elderId: string, domain: Domain, level:
 export async function addSession(s: Omit<GameSession, "id" | "date" | "ts">) {
   const now = new Date();
   await getDb().sessions.add({ ...s, date: isoDay(now), ts: now.getTime() });
+}
+
+/** Silent orientation check-in log — never used for elder-facing level messaging. */
+export async function addOrientationEntry(p: {
+  elderId: string;
+  correct: boolean;
+  responseMs: number;
+}) {
+  await addSession({
+    elderId: p.elderId,
+    domain: "orientation",
+    level: 1,
+    accuracy: p.correct ? 1 : 0,
+    durationSec: Math.round(p.responseMs / 1000),
+    responseMs: p.responseMs,
+  });
 }
 
 export const today = () => isoDay(new Date());
