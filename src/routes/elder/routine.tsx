@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ElderShell } from "@/components/rc/ElderShell";
 import { AudioIcon, Button, Card, StatusBadge } from "@/components/rc/ui";
+import { Orientation } from "@/components/rc/Orientation";
 import { getDb } from "@/lib/db";
 import { useDexie } from "@/hooks/useDexie";
 import { useApp } from "@/store/app";
@@ -72,6 +73,7 @@ function Routine() {
 
   return (
     <ElderShell title={t("myRoutine", lang)} onBack={() => navigate({ to: "/elder" })}>
+      {elderId && <Orientation elderId={elderId} />}
       <div className="space-y-5">
         {(reminders ?? []).map((r) => {
           const left = Math.max(0, r.windowSec - Math.floor((now - r.createdAt) / 1000));

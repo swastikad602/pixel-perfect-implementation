@@ -18,7 +18,7 @@ import { Chatbox } from "@/components/rc/Chatbox";
 import { getDb } from "@/lib/db";
 import { useDexie } from "@/hooks/useDexie";
 import { DOMAINS, DOMAIN_LABEL } from "@/lib/mockData";
-import { averageAccuracy, needsReview } from "@/lib/adaptive";
+import { averageAccuracy, needsReview, orientationTrend } from "@/lib/adaptive";
 import { useApp } from "@/store/app";
 
 export const Route = createFileRoute("/doctor")({
@@ -70,6 +70,9 @@ function Doctor() {
     sessions: sessions.filter((s) => s.domain === d).length,
     average: Math.round(averageAccuracy(sessions.filter((s) => s.domain === d)) * 100),
   }));
+
+  const orient7 = orientationTrend(sessions, 7);
+  const orient30 = orientationTrend(sessions, 30);
 
   const saveNote = async () => {
     if (!activeId || !note.trim()) return;
@@ -146,6 +149,25 @@ function Doctor() {
                   <Bar dataKey="average" fill="var(--chart-2)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
+            </div>
+          </Card>
+
+          <Card>
+            <CardTitle>Orientation check-in</CardTitle>
+            <p className="mb-4 text-xs text-muted-foreground">{DISCLAIMER}</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-xl bg-secondary/50 px-4 py-3">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Last 7 days</p>
+                <p className="font-serif text-2xl font-bold text-primary">
+                  {orient7 === null ? "—" : `${orient7}% correct`}
+                </p>
+              </div>
+              <div className="rounded-xl bg-secondary/50 px-4 py-3">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Last 30 days</p>
+                <p className="font-serif text-2xl font-bold text-primary">
+                  {orient30 === null ? "—" : `${orient30}% correct`}
+                </p>
+              </div>
             </div>
           </Card>
 

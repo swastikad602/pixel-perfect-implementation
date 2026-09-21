@@ -1,5 +1,5 @@
 // Single source of seed/mock data. Replace with real API/database calls later.
-import type { Domain } from "./types";
+import type { Domain, EntryDomain, GameMode } from "./types";
 
 export type SeedElder = {
   id: string;
@@ -24,11 +24,12 @@ export const SEED_ACCOUNTS = [
 
 export const DOMAINS: Domain[] = ["memory", "attention", "pattern", "executive"];
 
-export const DOMAIN_LABEL: Record<Domain, string> = {
+export const DOMAIN_LABEL: Record<EntryDomain, string> = {
   memory: "Memory",
   attention: "Attention",
   pattern: "Patterns",
   executive: "Daily Routine",
+  orientation: "Orientation",
 };
 
 export const DOMAIN_EMOJI: Record<Domain, string> = {
@@ -38,8 +39,40 @@ export const DOMAIN_EMOJI: Record<Domain, string> = {
   executive: "📋",
 };
 
+/** Games available inside each domain. Order matters for the picker screen. */
+export const DOMAIN_MODES: Record<Domain, GameMode[]> = {
+  memory: ["matching", "recall_tap"],
+  attention: ["find_object", "quick_spot"],
+  pattern: ["sequence"],
+  executive: ["arrange"],
+};
+
+export const MODE_LABEL: Record<GameMode, { en: string; bn: string }> = {
+  matching: { en: "Picture Matching", bn: "ছবি মেলানো" },
+  recall_tap: { en: "What Did You See?", bn: "আপনি কী দেখেছেন?" },
+  find_object: { en: "Find the Object", bn: "জিনিসটি খুঁজুন" },
+  quick_spot: { en: "Quick Spot", bn: "চটপট দেখা" },
+  sequence: { en: "What Comes Next?", bn: "এরপর কী আসবে?" },
+  arrange: { en: "Put in Order", bn: "ক্রমে সাজান" },
+};
+
+export const MODE_EMOJI: Record<GameMode, string> = {
+  matching: "🃏",
+  recall_tap: "👁️",
+  find_object: "🔍",
+  quick_spot: "⚡",
+  sequence: "🔷",
+  arrange: "📋",
+};
+
 export const MEMORY_ITEMS = ["🍎", "🌻", "🐦", "☕", "🔑", "🧵"];
 export const ATTENTION_ITEMS = ["🔑", "👓", "☂️", "🧦", "📻", "🪥", "🍌", "🧼"];
+/** Familiar objects shown in "What Did You See?" (5 targets are picked from these). */
+export const RECALL_ITEMS = ["🍵", "🕯️", "📕", "🪑", "🧺", "🥄", "🧢", "🌼"];
+/** Distractors; the last two are deliberately similar to the targets for level 2. */
+export const RECALL_DISTRACTORS = ["🚲", "🐈", "🎈", "🧊", "🍶", "📗"];
+/** Single familiar objects flashed in "Quick Spot". */
+export const SPOT_ITEMS = ["🔔", "🍋", "🧤", "🕰️", "🍞", "🌂"];
 export const PATTERN_SEQUENCES = [
   { seq: ["🔴", "🔵", "🔴", "🔵"], answer: "🔴", distractors: ["🔵", "🟢", "🟡"] },
   { seq: ["⭐", "⭐", "🌙", "⭐", "⭐"], answer: "🌙", distractors: ["⭐", "☀️", "☁️"] },

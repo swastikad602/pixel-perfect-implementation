@@ -1,4 +1,8 @@
 export type Domain = "memory" | "attention" | "pattern" | "executive";
+/** Entries stored in the sessions table: the four game domains plus orientation check-ins. */
+export type EntryDomain = Domain | "orientation";
+/** Multiple games can live inside one domain; each mode adapts independently. */
+export type GameMode = "matching" | "recall_tap" | "find_object" | "quick_spot" | "sequence" | "arrange";
 export type Level = 1 | 2;
 export type Role = "elder" | "caregiver" | "doctor" | "government";
 export type Lang = "en" | "bn";
@@ -15,18 +19,26 @@ export interface Elder {
 export interface GameSession {
   id?: number;
   elderId: string;
-  domain: Domain;
+  domain: EntryDomain;
+  /** Undefined for legacy rows and for orientation entries. */
+  mode?: GameMode;
   level: Level;
   accuracy: number; // 0..1
   durationSec: number;
+  /** Silent response-time logging (quick spot, orientation check-in). */
+  responseMs?: number;
+  /** Extra detail for the caregiver/doctor views, never shown to the elder. */
+  correctCount?: number;
+  incorrectCount?: number;
   date: string; // ISO date (yyyy-mm-dd)
   ts: number;
 }
 
 export interface Recommendation {
-  key: string; // `${elderId}:${domain}`
+  key: string; // `${elderId}:${domain}:${mode}`
   elderId: string;
   domain: Domain;
+  mode: GameMode;
   level: Level;
   updatedAt: number;
 }

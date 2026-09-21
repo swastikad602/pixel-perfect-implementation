@@ -10,6 +10,7 @@ export const STRINGS: Dict = {
   help: { en: "Help", bn: "সাহায্য" },
   hello: { en: "Hello", bn: "নমস্কার" },
   chooseActivity: { en: "Choose an activity", bn: "একটি কার্যকলাপ বেছে নিন" },
+  chooseGame: { en: "Choose a game", bn: "একটি খেলা বেছে নিন" },
   back: { en: "Back", bn: "পিছনে" },
   done: { en: "Done", bn: "হয়ে গেছে" },
   remindLater: { en: "Remind me later", bn: "পরে মনে করিয়ে দিন" },
@@ -22,6 +23,12 @@ export const STRINGS: Dict = {
   attentionInstruction: { en: "Tap this object", bn: "এই জিনিসটি স্পর্শ করুন" },
   patternInstruction: { en: "What comes next?", bn: "এরপর কী আসবে?" },
   executiveInstruction: { en: "Put the steps in order", bn: "ধাপগুলি ক্রমানুসারে সাজান" },
+  recallWatch: { en: "Look carefully at these pictures", bn: "এই ছবিগুলি মন দিয়ে দেখুন" },
+  recallPick: { en: "Tap every picture you saw", bn: "আপনি যে ছবিগুলি দেখেছেন সেগুলি স্পর্শ করুন" },
+  recallResult: { en: "You remembered {n} of 5!", bn: "আপনি ৫টির মধ্যে {n}টি মনে রেখেছেন!" },
+  spotWatch: { en: "Watch the screen", bn: "পর্দার দিকে তাকিয়ে থাকুন" },
+  sawIt: { en: "I saw it!", bn: "আমি দেখেছি!" },
+  spotResult: { en: "Your reaction time is getting sharper!", bn: "আপনার প্রতিক্রিয়া আরও ক্ষুরধার হচ্ছে!" },
   helpText: {
     en: "Help is on the way. Your caregiver has been notified.",
     bn: "সাহায্য আসছে। আপনার পরিচর্যাকারীকে জানানো হয়েছে।",
@@ -30,10 +37,42 @@ export const STRINGS: Dict = {
   todayReminders: { en: "Today", bn: "আজ" },
   exit: { en: "Exit", bn: "প্রস্থান" },
   playAgain: { en: "Play again", bn: "আবার খেলুন" },
+  orientationQuestion: { en: "Do you know what day it is today?", bn: "আজ কী বার জানেন?" },
+  orientationReveal: { en: "Today is {day}, {date}!", bn: "আজ {day}, {date}!" },
 };
+
+export const DAY_NAMES: Record<Lang, string[]> = {
+  en: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  bn: ["রবিবার", "সোমবার", "মঙ্গলবার", "বুধবার", "বৃহস্পতিবার", "শুক্রবার", "শনিবার"],
+};
+
+export const MONTH_NAMES: Record<Lang, string[]> = {
+  en: [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ],
+  bn: [
+    "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+    "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর",
+  ],
+};
+
+const BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+export function localizeNumber(n: number, lang: Lang): string {
+  const s = String(n);
+  return lang === "bn" ? s.replace(/\d/g, (d) => BN_DIGITS[Number(d)]!) : s;
+}
 
 export function t(key: string, lang: Lang): string {
   const entry = STRINGS[key];
   if (!entry) return key;
   return entry[lang] ?? entry.en;
+}
+
+/** Same as t(), with {placeholder} substitution. */
+export function tf(key: string, lang: Lang, vars: Record<string, string>): string {
+  return Object.entries(vars).reduce(
+    (out, [k, v]) => out.replaceAll(`{${k}}`, v),
+    t(key, lang),
+  );
 }
