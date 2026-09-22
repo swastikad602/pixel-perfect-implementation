@@ -214,3 +214,31 @@ export async function addOrientationEntry(p: {
 }
 
 export const today = () => isoDay(new Date());
+
+/* ---------------- Companion ---------------- */
+
+/** Transcripts are kept only as long as needed for caregiver alerts and doctor review. */
+export const TRANSCRIPT_RETENTION_DAYS = 30;
+
+export async function pruneCompanion(elderId: string) {
+  const db = getDb();
+  const cutoff = Date.now() - TRANSCRIPT_RETENTION_DAYS * 864e5;
+  await db.companion.where("elderId").equals(elderId).and((m) => m.ts < cutoff).delete();
+  await db.alerts
+    .where("elderId")
+    .equals(elderId)
+    .and((a) => a.acknowledged === 1 && a.ts < cutoff)
+    .delete();
+}
+
+export async function hasCompanionConsent(elderId: string) {
+  const row = await getDb().consents.get(elderId);
+  return !!row?.companion;
+}
+
+export async function setCompanionConsent(elderId: string, value: boolean, by: "elder" | "caregiver") {
+  const db = getDb();
+  await db.consents.put({ elderId, companion: value, updatedAt: Date.now(), by });
+  // Withdrawing consent also removes the stored conversation.
+  if (!value) await db.companion.where("elderId").equals(elderId).delete();
+}
