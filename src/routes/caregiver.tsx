@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Music, Plus } from "lucide-react";
 import { Shell } from "@/components/rc/Shell";
 import { Button, Card, CardTitle, Field, Modal, StatusBadge } from "@/components/rc/ui";
 import { Chatbox } from "@/components/rc/Chatbox";
+import {
+  AddFavoriteModal,
+  CompanionAlertsBanner,
+  ElderCompanionPanel,
+} from "@/components/rc/CompanionCaregiver";
 import { getDb, today } from "@/lib/db";
 import { useDexie } from "@/hooks/useDexie";
 import { needsReview, orientationTrend } from "@/lib/adaptive";
@@ -46,6 +51,7 @@ function Caregiver() {
   const setSimulateOffline = useApp((s) => s.setSimulateOffline);
   const [form, setForm] = useState<FormKind>(null);
   const [f, setF] = useState<FormState>({});
+  const [favOpen, setFavOpen] = useState(false);
 
   const data = useDexie(async () => {
     const db = getDb();
@@ -112,6 +118,9 @@ function Caregiver() {
         </Button>
         <Button variant="soft" onClick={() => setForm("card")}>
           <Plus className="h-4 w-4" /> Add family memory card
+        </Button>
+        <Button variant="soft" onClick={() => setFavOpen(true)}>
+          <Music className="h-4 w-4" /> Add favourite song or poem
         </Button>
         <label className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
           <input
