@@ -166,3 +166,20 @@ export async function prewarmTts() {
     await fetchClip(p.text, p.lang);
   }
 }
+
+/** Plays an already-generated base64 clip (e.g. Bhashini WAV) with the same speaking state as speak(). */
+export function playClip(base64: string) {
+  if (typeof window === "undefined" || !base64) return;
+  setBusy(true);
+  play(base64);
+}
+
+/** Stops any speech in progress (cloud clip or browser voice). */
+export function stopSpeaking() {
+  if (current) {
+    current.pause();
+    current = null;
+  }
+  if (typeof window !== "undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();
+  setBusy(false);
+}
