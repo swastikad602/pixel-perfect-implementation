@@ -39,6 +39,41 @@ export const STRINGS: Dict = {
   playAgain: { en: "Play again", bn: "আবার খেলুন" },
   orientationQuestion: { en: "Do you know what day it is today?", bn: "আজ কী বার জানেন?" },
   orientationReveal: { en: "Today is {day}, {date}!", bn: "আজ {day}, {date}!" },
+  companion: { en: "Talk to a Friend", bn: "বন্ধুর সাথে কথা" },
+  holdToTalk: { en: "Hold to talk", bn: "চেপে ধরে কথা বলুন" },
+  holdHint: { en: "Hold the button and speak", bn: "বোতামটি চেপে ধরে কথা বলুন" },
+  tapToStop: { en: "Tap again when you're done", bn: "শেষ হলে আবার স্পর্শ করুন" },
+  listening: { en: "I'm listening…", bn: "আমি শুনছি…" },
+  thinking: { en: "Just a moment…", bn: "একটু দাঁড়ান…" },
+  speakingNow: { en: "Speaking…", bn: "বলছি…" },
+  playFavorite: { en: "Play something I love", bn: "আমার প্রিয় কিছু শোনাও" },
+  chooseFavorite: { en: "Which one would you like?", bn: "কোনটা শুনবেন?" },
+  noFavorites: {
+    en: "Your caregiver can add your favourite songs here.",
+    bn: "আপনার পরিচর্যাকারী এখানে আপনার প্রিয় গান যোগ করতে পারেন।",
+  },
+  stop: { en: "Stop", bn: "থামান" },
+  companionGreeting: {
+    en: "Hello {name}! I'm your friendly companion. How are you feeling today?",
+    bn: "নমস্কার {name}! আমি আপনার সঙ্গী বন্ধু। আজ আপনি কেমন আছেন?",
+  },
+  didNotHear: {
+    en: "I didn't quite hear that. Could you say it again?",
+    bn: "আমি ঠিক শুনতে পাইনি। আরেকবার বলবেন?",
+  },
+  micBlocked: {
+    en: "The microphone is off. A helper can type below.",
+    bn: "মাইক্রোফোন বন্ধ আছে। একজন সাহায্যকারী নিচে লিখতে পারেন।",
+  },
+  consentTitle: { en: "Before we talk", bn: "কথা বলার আগে" },
+  consentText: {
+    en: "When you hold the button, this friend listens to your voice. Your words are kept safely for your caregiver and your doctor only, so they can help if you feel low. Is that okay?",
+    bn: "বোতাম চেপে ধরলে এই বন্ধু আপনার কথা শোনে। আপনার কথাগুলি শুধু আপনার পরিচর্যাকারী ও ডাক্তারের জন্য নিরাপদে রাখা হয়, যাতে মন খারাপ হলে তাঁরা পাশে থাকতে পারেন। এতে কি আপনার সম্মতি আছে?",
+  },
+  consentYes: { en: "Yes, that's okay", bn: "হ্যাঁ, ঠিক আছে" },
+  consentNo: { en: "Not now", bn: "এখন না" },
+  helperType: { en: "Helper: type instead", bn: "সাহায্যকারী: লিখে পাঠান" },
+  send: { en: "Send", bn: "পাঠান" },
 };
 
 export const DAY_NAMES: Record<Lang, string[]> = {
