@@ -123,6 +123,9 @@ function Caregiver() {
         </label>
       </div>
 
+      <CompanionAlertsBanner elders={data?.elders ?? []} />
+      <AddFavoriteModal open={favOpen} onClose={() => setFavOpen(false)} elders={data?.elders ?? []} />
+
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           {(data?.elders ?? []).map((elder) => {
@@ -162,6 +165,7 @@ function Caregiver() {
                     Activity performance trend — not a clinical diagnosis.
                   </p>
                 </div>
+                <ElderCompanionPanel elderId={elder.id} />
                 <div>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">Reminders</p>
                   <div className="space-y-2">
