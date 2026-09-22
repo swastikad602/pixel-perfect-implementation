@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus } from "lucide-react";
+import { Music, Plus } from "lucide-react";
 import { Shell } from "@/components/rc/Shell";
 import { Button, Card, CardTitle, Field, Modal, StatusBadge } from "@/components/rc/ui";
 import { Chatbox } from "@/components/rc/Chatbox";
+import {
+  AddFavoriteModal,
+  CompanionAlertsBanner,
+  ElderCompanionPanel,
+} from "@/components/rc/CompanionCaregiver";
 import { getDb, today } from "@/lib/db";
 import { useDexie } from "@/hooks/useDexie";
 import { needsReview, orientationTrend } from "@/lib/adaptive";
@@ -46,6 +51,7 @@ function Caregiver() {
   const setSimulateOffline = useApp((s) => s.setSimulateOffline);
   const [form, setForm] = useState<FormKind>(null);
   const [f, setF] = useState<FormState>({});
+  const [favOpen, setFavOpen] = useState(false);
 
   const data = useDexie(async () => {
     const db = getDb();
@@ -113,6 +119,9 @@ function Caregiver() {
         <Button variant="soft" onClick={() => setForm("card")}>
           <Plus className="h-4 w-4" /> Add family memory card
         </Button>
+        <Button variant="soft" onClick={() => setFavOpen(true)}>
+          <Music className="h-4 w-4" /> Add favourite song or poem
+        </Button>
         <label className="ml-auto flex items-center gap-2 text-sm text-muted-foreground">
           <input
             type="checkbox"
@@ -122,6 +131,9 @@ function Caregiver() {
           Simulate offline (demo)
         </label>
       </div>
+
+      <CompanionAlertsBanner elders={data?.elders ?? []} />
+      <AddFavoriteModal open={favOpen} onClose={() => setFavOpen(false)} elders={data?.elders ?? []} />
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
@@ -162,6 +174,7 @@ function Caregiver() {
                     Activity performance trend — not a clinical diagnosis.
                   </p>
                 </div>
+                <ElderCompanionPanel elderId={elder.id} />
                 <div>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">Reminders</p>
                   <div className="space-y-2">

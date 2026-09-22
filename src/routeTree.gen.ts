@@ -15,6 +15,7 @@ import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as GovernmentRouteImport } from './routes/government'
 import { Route as ApiTtsRouteImport } from './routes/api/tts'
 import { Route as ElderIndexRouteImport } from './routes/elder/index'
+import { Route as ElderCompanionRouteImport } from './routes/elder/companion'
 import { Route as ElderHelpRouteImport } from './routes/elder/help'
 import { Route as ElderPeopleRouteImport } from './routes/elder/people'
 import { Route as ElderPlayRouteImport } from './routes/elder/play'
@@ -50,6 +51,11 @@ const ApiTtsRoute = ApiTtsRouteImport.update({
 const ElderIndexRoute = ElderIndexRouteImport.update({
   id: '/elder/',
   path: '/elder/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ElderCompanionRoute = ElderCompanionRouteImport.update({
+  id: '/elder/companion',
+  path: '/elder/companion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ElderHelpRoute = ElderHelpRouteImport.update({
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
   '/api/tts': typeof ApiTtsRoute
+  '/elder/companion': typeof ElderCompanionRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
   '/api/tts': typeof ApiTtsRoute
+  '/elder/companion': typeof ElderCompanionRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/doctor': typeof DoctorRoute
   '/government': typeof GovernmentRoute
   '/api/tts': typeof ApiTtsRoute
+  '/elder/companion': typeof ElderCompanionRoute
   '/elder/help': typeof ElderHelpRoute
   '/elder/people': typeof ElderPeopleRoute
   '/elder/play': typeof ElderPlayRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/doctor'
     | '/government'
     | '/api/tts'
+    | '/elder/companion'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/doctor'
     | '/government'
     | '/api/tts'
+    | '/elder/companion'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/doctor'
     | '/government'
     | '/api/tts'
+    | '/elder/companion'
     | '/elder/help'
     | '/elder/people'
     | '/elder/play'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   DoctorRoute: typeof DoctorRoute
   GovernmentRoute: typeof GovernmentRoute
   ApiTtsRoute: typeof ApiTtsRoute
+  ElderCompanionRoute: typeof ElderCompanionRoute
   ElderHelpRoute: typeof ElderHelpRoute
   ElderPeopleRoute: typeof ElderPeopleRoute
   ElderPlayRoute: typeof ElderPlayRoute
@@ -230,6 +243,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ElderIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/elder/companion': {
+      id: '/elder/companion'
+      path: '/elder/companion'
+      fullPath: '/elder/companion'
+      preLoaderRoute: typeof ElderCompanionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/elder/help': {
       id: '/elder/help'
       path: '/elder/help'
@@ -281,6 +301,7 @@ const rootRouteChildren: RootRouteChildren = {
   DoctorRoute: DoctorRoute,
   GovernmentRoute: GovernmentRoute,
   ApiTtsRoute: ApiTtsRoute,
+  ElderCompanionRoute: ElderCompanionRoute,
   ElderHelpRoute: ElderHelpRoute,
   ElderPeopleRoute: ElderPeopleRoute,
   ElderPlayRoute: ElderPlayRoute,

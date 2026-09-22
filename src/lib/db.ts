@@ -1,9 +1,13 @@
 import Dexie, { type Table } from "dexie";
 import type {
   ChatMessage,
+  CompanionAlert,
+  CompanionMessage,
+  Consent,
   DoctorNote,
   Domain,
   Elder,
+  Favorite,
   GameMode,
   GameSession,
   Level,
@@ -29,6 +33,11 @@ class ReconnectDB extends Dexie {
   chat!: Table<ChatMessage, number>;
   // Cached cloud TTS clips (base64 mp3) keyed by `${lang}:${text}`.
   ttsClips!: Table<{ key: string; audio: string; createdAt: number }, string>;
+  // Companion (v4): transcripts, caregiver alerts, favourite songs/poems, consent.
+  companion!: Table<CompanionMessage, number>;
+  alerts!: Table<CompanionAlert, number>;
+  favorites!: Table<Favorite, number>;
+  consents!: Table<Consent, string>;
 
   constructor() {
     super("reconnect");
@@ -63,6 +72,12 @@ class ReconnectDB extends Dexie {
             if (!s.mode && legacy) s.mode = legacy;
           });
       });
+    this.version(4).stores({
+      companion: "++id, elderId, ts",
+      alerts: "++id, elderId, ts, acknowledged",
+      favorites: "++id, elderId, createdAt",
+      consents: "elderId",
+    });
   }
 }
 
@@ -199,3 +214,31 @@ export async function addOrientationEntry(p: {
 }
 
 export const today = () => isoDay(new Date());
+
+/* ---------------- Companion ---------------- */
+
+/** Transcripts are kept only as long as needed for caregiver alerts and doctor review. */
+export const TRANSCRIPT_RETENTION_DAYS = 30;
+
+export async function pruneCompanion(elderId: string) {
+  const db = getDb();
+  const cutoff = Date.now() - TRANSCRIPT_RETENTION_DAYS * 864e5;
+  await db.companion.where("elderId").equals(elderId).and((m) => m.ts < cutoff).delete();
+  await db.alerts
+    .where("elderId")
+    .equals(elderId)
+    .and((a) => a.acknowledged === 1 && a.ts < cutoff)
+    .delete();
+}
+
+export async function hasCompanionConsent(elderId: string) {
+  const row = await getDb().consents.get(elderId);
+  return !!row?.companion;
+}
+
+export async function setCompanionConsent(elderId: string, value: boolean, by: "elder" | "caregiver") {
+  const db = getDb();
+  await db.consents.put({ elderId, companion: value, updatedAt: Date.now(), by });
+  // Withdrawing consent also removes the stored conversation.
+  if (!value) await db.companion.where("elderId").equals(elderId).delete();
+}

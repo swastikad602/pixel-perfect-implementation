@@ -38,3 +38,23 @@ export function useOnline() {
   }, []);
   return online && !simulateOffline;
 }
+
+/** Live Dexie query — updates instantly, including when another tab writes (used for urgent alerts). */
+export function useLiveDexie<T>(fn: () => Promise<T>, deps: unknown[] = []): T | undefined {
+  const [data, setData] = useState<T>();
+  useEffect(() => {
+    let alive = true;
+    let sub: { unsubscribe: () => void } | undefined;
+    void ensureSeed().then(async () => {
+      if (!alive) return;
+      const { liveQuery } = await import("dexie");
+      sub = liveQuery(fn).subscribe({ next: (v) => alive && setData(v), error: (e) => console.error(e) });
+    });
+    return () => {
+      alive = false;
+      sub?.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return data;
+}

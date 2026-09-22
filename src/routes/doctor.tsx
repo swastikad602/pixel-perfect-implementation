@@ -46,6 +46,8 @@ function Doctor() {
       elders: await db.elders.toArray(),
       sessions: await db.sessions.toArray(),
       notes: await db.notes.toArray(),
+      // Companion alerts stay inside the Elder–Caregiver–Doctor circle (never on the government view).
+      alerts: await db.alerts.toArray(),
     };
   });
 
@@ -168,6 +170,35 @@ function Doctor() {
                   {orient30 === null ? "—" : `${orient30}% correct`}
                 </p>
               </div>
+            </div>
+          </Card>
+
+          <Card>
+            <CardTitle>Talk to a Friend — flagged moments</CardTitle>
+            <p className="mb-3 text-xs text-muted-foreground">
+              Moments the companion flagged to the caregiver (last 30 days). Engagement signal — not a clinical assessment.
+            </p>
+            <div className="space-y-2">
+              {(data?.alerts ?? [])
+                .filter((a) => a.elderId === activeId && a.ts > Date.now() - 30 * 864e5)
+                .sort((a, b) => b.ts - a.ts)
+                .map((a) => (
+                  <div key={a.id} className="rounded-xl bg-secondary/50 px-3 py-2 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <StatusBadge tone={a.level === "urgent" ? "danger" : "info"}>
+                        {a.level === "urgent" ? "Distress" : "Asked for caregiver"}
+                      </StatusBadge>
+                      <span className="text-xs text-muted-foreground">{new Date(a.ts).toLocaleString()}</span>
+                      <span className="ml-auto text-xs text-muted-foreground">
+                        {a.acknowledged ? "Seen by caregiver" : "Not yet seen"}
+                      </span>
+                    </div>
+                    <p className="mt-1">“{a.transcript}”</p>
+                  </div>
+                ))}
+              {(data?.alerts ?? []).filter((a) => a.elderId === activeId).length === 0 && (
+                <p className="text-sm text-muted-foreground">Nothing flagged.</p>
+              )}
             </div>
           </Card>
 
