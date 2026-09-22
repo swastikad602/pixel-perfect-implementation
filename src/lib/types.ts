@@ -80,3 +80,49 @@ export interface ChatMessage {
   text: string;
   ts: number;
 }
+
+/* ---------------- Companion ---------------- */
+export interface CompanionMessage {
+  id?: number;
+  elderId: string;
+  from: "user" | "bot";
+  text: string;
+  ts: number;
+  /** True when this turn triggered a caregiver alert. */
+  flagged?: boolean;
+}
+
+export type AlertLevel = "urgent" | "request";
+
+/** Caregiver-facing alert raised by the Companion. Never shared with the government view. */
+export interface CompanionAlert {
+  id?: number;
+  elderId: string;
+  level: AlertLevel;
+  /** What the elder said (context for the caregiver). */
+  transcript: string;
+  /** What the companion said back. */
+  reply: string;
+  reason: string;
+  ts: number;
+  acknowledged: 0 | 1;
+  acknowledgedAt?: number;
+}
+
+/** Caregiver-uploaded song or poem the elder loves (audio kept on this device). */
+export interface Favorite {
+  id?: number;
+  elderId: string; // user_id
+  title: string;
+  label: string;
+  audio: Blob; // audio_url is created from this blob at play time
+  mime: string;
+  createdAt: number;
+}
+
+export interface Consent {
+  elderId: string;
+  companion: boolean;
+  updatedAt: number;
+  by: "elder" | "caregiver";
+}
