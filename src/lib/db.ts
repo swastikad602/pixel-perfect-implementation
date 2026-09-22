@@ -1,9 +1,13 @@
 import Dexie, { type Table } from "dexie";
 import type {
   ChatMessage,
+  CompanionAlert,
+  CompanionMessage,
+  Consent,
   DoctorNote,
   Domain,
   Elder,
+  Favorite,
   GameMode,
   GameSession,
   Level,
@@ -29,6 +33,11 @@ class ReconnectDB extends Dexie {
   chat!: Table<ChatMessage, number>;
   // Cached cloud TTS clips (base64 mp3) keyed by `${lang}:${text}`.
   ttsClips!: Table<{ key: string; audio: string; createdAt: number }, string>;
+  // Companion (v4): transcripts, caregiver alerts, favourite songs/poems, consent.
+  companion!: Table<CompanionMessage, number>;
+  alerts!: Table<CompanionAlert, number>;
+  favorites!: Table<Favorite, number>;
+  consents!: Table<Consent, string>;
 
   constructor() {
     super("reconnect");
@@ -63,6 +72,12 @@ class ReconnectDB extends Dexie {
             if (!s.mode && legacy) s.mode = legacy;
           });
       });
+    this.version(4).stores({
+      companion: "++id, elderId, ts",
+      alerts: "++id, elderId, ts, acknowledged",
+      favorites: "++id, elderId, createdAt",
+      consents: "elderId",
+    });
   }
 }
 
