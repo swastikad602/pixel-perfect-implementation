@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Gamepad2, ListChecks, Users, LifeBuoy } from "lucide-react";
+import { Gamepad2, ListChecks, Users, LifeBuoy, MessageCircleHeart } from "lucide-react";
 import { ElderShell } from "@/components/rc/ElderShell";
 import { AudioIcon } from "@/components/rc/ui";
 import { useApp } from "@/store/app";
@@ -27,13 +27,14 @@ function ElderHome() {
     { key: "myRoutine", icon: ListChecks, to: "/elder/routine" as const },
     { key: "myPeople", icon: Users, to: "/elder/people" as const },
     { key: "help", icon: LifeBuoy, to: "/elder/help" as const },
+    { key: "companion", icon: MessageCircleHeart, to: "/elder/companion" as const },
   ];
 
   return (
     <ElderShell title={`${t("hello", lang)}, ${name.split(" ")[0]}`}>
       <div className="grid gap-5 sm:grid-cols-2">
         {tiles.map(({ key, icon: Icon, to }) => (
-          <div key={key} className="relative">
+          <div key={key} className={key === "companion" ? "relative sm:col-span-2" : "relative"}>
             <button
               onClick={() => navigate({ to })}
               className="flex min-h-40 w-full flex-col items-center justify-center gap-3 rounded-3xl border-4 border-primary/25 bg-card p-6 shadow-sm transition-all hover:border-primary hover:shadow-md active:scale-[0.99]"
