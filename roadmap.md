@@ -11,4 +11,5 @@
 - [x] Reply safety tested across varied conversations (en + bn)
 - [ ] Bhashini end-to-end check — blocked on BHASHINI_USER_ID / BHASHINI_API_KEY / BHASHINI_PIPELINE_ID
 - [ ] Switch replies to your own Gemini key — blocked on GEMINI_API_KEY
-- [ ] In-browser check of hold-to-talk, caregiver alert banner, and favourite playback
+- [x] In-browser check: companion chat + urgent caregiver alert
+- [ ] Real-device check of hold-to-talk mic and favourite song playback (needs a real microphone/speaker)
