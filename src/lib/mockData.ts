@@ -100,11 +100,14 @@ export const SEED_REMINDERS = [
 
 // Aggregate-only figures for the government dashboard (de-identified, illustrative).
 export const STATE_PARTICIPATION = [
-  { state: "West Bengal", users: 4120, sessions: 18240 },
-  { state: "Kerala", users: 3180, sessions: 15110 },
-  { state: "Tamil Nadu", users: 2740, sessions: 12980 },
-  { state: "Maharashtra", users: 2210, sessions: 9870 },
-  { state: "Assam", users: 1180, sessions: 4420 },
+  { state: "Assam", users: 6240, sessions: 28460 },
+  { state: "Tripura", users: 2580, sessions: 11790 },
+  { state: "Meghalaya", users: 1960, sessions: 8420 },
+  { state: "Manipur", users: 1740, sessions: 7680 },
+  { state: "Nagaland", users: 1320, sessions: 5710 },
+  { state: "Arunachal Pradesh", users: 940, sessions: 3890 },
+  { state: "Mizoram", users: 860, sessions: 3740 },
+  { state: "Sikkim", users: 510, sessions: 2180 },
 ];
 
 export const LANGUAGE_USAGE = [
