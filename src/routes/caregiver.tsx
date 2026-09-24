@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Music, Plus } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Shell } from "@/components/rc/Shell";
 import { Button, Card, CardTitle, Field, Modal, StatusBadge } from "@/components/rc/ui";
 import { Chatbox } from "@/components/rc/Chatbox";
