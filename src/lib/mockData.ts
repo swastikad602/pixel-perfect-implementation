@@ -13,7 +13,7 @@ export type SeedElder = {
 export const SEED_ELDERS: SeedElder[] = [
   { id: "e1", name: "Anita Das", pin: "1234", age: 78, state: "Tripura", language: "bn" },
   { id: "e2", name: "Robert Menon", pin: "2345", age: 81, state: "Assam", language: "en" },
-  { id: "e3", name: "Kamala Iyer", pin: "3456", age: 74, state: "Tamil Nadu", language: "en" },
+  { id: "e3", name: "Kamala Iyer", pin: "3456", age: 74, state: "Manipur", language: "en" },
 ];
 
 export const SEED_ACCOUNTS = [
