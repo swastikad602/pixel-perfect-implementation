@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Music, Plus } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Shell } from "@/components/rc/Shell";
 import { Button, Card, CardTitle, Field, Modal, StatusBadge } from "@/components/rc/ui";
 import { Chatbox } from "@/components/rc/Chatbox";
@@ -14,7 +24,7 @@ import { useDexie } from "@/hooks/useDexie";
 import { needsReview, orientationTrend } from "@/lib/adaptive";
 import { DOMAIN_LABEL } from "@/lib/mockData";
 import { useApp } from "@/store/app";
-import type { ReminderStatus } from "@/lib/types";
+import type { GameSession, ReminderStatus } from "@/lib/types";
 
 export const Route = createFileRoute("/caregiver")({
   component: Caregiver,
@@ -174,6 +184,7 @@ function Caregiver() {
                     Activity performance trend — not a clinical diagnosis.
                   </p>
                 </div>
+                <ElderPerformance sessions={sessions} />
                 <ElderCompanionPanel elderId={elder.id} />
                 <div>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">Reminders</p>
@@ -255,6 +266,61 @@ function Stat({ label, value }: { label: string; value: string }) {
     <div className="rounded-xl bg-secondary/50 px-4 py-3">
       <p className="text-xs font-semibold uppercase text-muted-foreground">{label}</p>
       <p className="font-serif text-xl font-bold">{value}</p>
+    </div>
+  );
+}
+
+/** Average accuracy per game domain, shown as a simple bar chart on each patient card. */
+function ElderPerformance({ sessions }: { sessions: GameSession[] }) {
+  const games = sessions.filter((s) => s.domain !== "orientation");
+  const byDomain = new Map<string, { total: number; n: number }>();
+  for (const s of games) {
+    const label = DOMAIN_LABEL[s.domain];
+    const cur = byDomain.get(label) ?? { total: 0, n: 0 };
+    cur.total += s.accuracy;
+    cur.n += 1;
+    byDomain.set(label, cur);
+  }
+  const rows = [...byDomain.entries()].map(([name, v]) => ({
+    name,
+    accuracy: Math.round((v.total / v.n) * 100),
+  }));
+
+  return (
+    <div>
+      <p className="mb-2 text-sm font-semibold text-muted-foreground">Performance by activity</p>
+      {rows.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No game sessions yet.</p>
+      ) : (
+        <>
+          <div className="h-44 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: -22 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
+                <YAxis
+                  domain={[0, 100]}
+                  tickFormatter={(v: number) => `${v}%`}
+                  tick={{ fontSize: 11 }}
+                  stroke="var(--muted-foreground)"
+                />
+                <Tooltip
+                  formatter={(value) => [`${value}%`, "Avg. accuracy"]}
+                  cursor={{ fill: "var(--secondary)" }}
+                />
+                <Bar dataKey="accuracy" radius={[6, 6, 0, 0]}>
+                  {rows.map((_, i) => (
+                    <Cell key={i} fill={`var(--chart-${(i % 5) + 1})`} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Average accuracy per activity — not a clinical diagnosis.
+          </p>
+        </>
+      )}
     </div>
   );
 }
