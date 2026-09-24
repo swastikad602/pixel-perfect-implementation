@@ -87,7 +87,7 @@ function Government() {
               <PieChart>
                 <Pie data={LANGUAGE_USAGE} dataKey="value" nameKey="language" outerRadius={100} label>
                   {LANGUAGE_USAGE.map((_, i) => (
-                    <Cell key={i} fill={`var(--chart-${i + 1})`} />
+                    <Cell key={i} fill={`var(--chart-${(i % 5) + 1})`} />
                   ))}
                 </Pie>
                 <Tooltip />
