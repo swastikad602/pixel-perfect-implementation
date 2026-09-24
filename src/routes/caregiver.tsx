@@ -184,6 +184,7 @@ function Caregiver() {
                     Activity performance trend — not a clinical diagnosis.
                   </p>
                 </div>
+                <ElderPerformance sessions={sessions} />
                 <ElderCompanionPanel elderId={elder.id} />
                 <div>
                   <p className="mb-2 text-sm font-semibold text-muted-foreground">Reminders</p>
