@@ -13,3 +13,6 @@
 - [ ] Switch replies to your own Gemini key — blocked on GEMINI_API_KEY
 - [x] In-browser check: companion chat + urgent caregiver alert
 - [ ] Real-device check of hold-to-talk mic and favourite song playback (needs a real microphone/speaker)
+
+## Government dashboard
+- [x] Replace participation data with all 8 North Eastern Region states only
