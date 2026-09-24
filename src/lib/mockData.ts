@@ -111,8 +111,10 @@ export const STATE_PARTICIPATION = [
 ];
 
 export const LANGUAGE_USAGE = [
-  { language: "Bengali", value: 41 },
-  { language: "English", value: 34 },
-  { language: "Tamil", value: 14 },
-  { language: "Malayalam", value: 11 },
+  { language: "Manipuri", value: 18 },
+  { language: "Bengali", value: 22 },
+  { language: "Assamese", value: 27 },
+  { language: "English", value: 16 },
+  { language: "Sikkimese", value: 8 },
+  { language: "Meiteilon", value: 9 },
 ];

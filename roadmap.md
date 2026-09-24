@@ -16,3 +16,4 @@
 
 ## Government dashboard
 - [x] Replace participation data with all 8 North Eastern Region states only
+- [x] Update language usage chart to the requested regional language labels
